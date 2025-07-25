@@ -1,12 +1,10 @@
 #pragma once
 #include <Arduino.h>
 
-// Arduino Matter library classes
-// Note: These would need to be included individually based on Silicon Labs library structure
-// For now, we'll stub them and implement based on available library classes
-
-// Forward declaration for PowerManager
+// Forward declarations
 class PowerManager;
+class CalibrationManager;
+class DisplayFactory;
 
 // Stub for Matter device classes - replace with actual Silicon Labs Matter library classes
 class MatterDevice {
@@ -70,35 +68,77 @@ public:
     void setBatteryVoltage(float voltage);
     void setBatteryPercent(float percent);
     
-    // Power management controls (via switches)
+    // Power management controls
     void setPowerManager(PowerManager* manager);
+    void setCalibrationManager(CalibrationManager* manager);
+    // Note: DisplayFactory is static, so we'll access it directly
+    
+    // Power management controls (via switches)
     bool getPowerManagementEnabled();
     void setPowerManagementEnabled(bool enabled);
+    bool getUsbConnected();
+    void setUsbConnected(bool connected);
+    bool getCalibrationMode();
+    void setCalibrationMode(bool active);
     
     // Sleep interval controls (using temperature sensors as proxy)
     uint32_t getNormalSleepInterval();
     void setNormalSleepInterval(uint32_t intervalSec);
     uint32_t getExtendedSleepInterval();
     void setExtendedSleepInterval(uint32_t intervalSec);
+    uint32_t getLowPowerSleepInterval();
+    void setLowPowerSleepInterval(uint32_t intervalSec);
+    uint32_t getUsbSleepInterval();
+    void setUsbSleepInterval(uint32_t intervalSec);
+    
+    // Calibration data access (read-only via temperature sensors)
+    void updateCalibrationValues();
+    float getMoistureDryValue();
+    float getMoistureWetValue();
+    float getBatteryDivider();
     
     // Status reporting
     uint8_t getCurrentPowerState();
     float getCurrentSleepInterval();
+    uint8_t getDisplayType(); // 0=None, 1=Serial, 2=LED, 3=OLED
     
     // Matter device callbacks
     void onNormalSleepIntervalChanged();
     void onExtendedSleepIntervalChanged();
+    void onLowPowerSleepIntervalChanged();
+    void onUsbSleepIntervalChanged();
     void onPowerManagementToggled();
+    void onCalibrationModeToggled();
     
 private:
     // Multiple Matter endpoints for different data types
     MatterHumidityStub soilMoisture;           // Primary sensor
     MatterTemperatureStub batteryLevel;        // Battery % (using temp sensor)
-    MatterTemperatureStub sleepIntervalNormal; // Sleep config (using temp sensor)
-    MatterTemperatureStub sleepIntervalExt;    // Sleep config (using temp sensor)
+    MatterTemperatureStub batteryVoltage;      // Battery voltage (using temp sensor)
+    
+    // Sleep interval configuration (using temperature sensors)
+    MatterTemperatureStub sleepIntervalNormal; // Normal sleep config
+    MatterTemperatureStub sleepIntervalExt;    // Extended sleep config  
+    MatterTemperatureStub sleepIntervalLow;    // Low power sleep config
+    MatterTemperatureStub sleepIntervalUsb;    // USB sleep config
+    
+    // Status reporting (using temperature sensors)
+    MatterTemperatureStub powerStateReport;    // Current power state (0-4)
+    MatterTemperatureStub displayTypeReport;   // Display type (0-3)
+    MatterTemperatureStub currentSleepReport;  // Current sleep interval
+    
+    // Calibration values (read-only, using temperature sensors)
+    MatterTemperatureStub calibDryValue;       // Moisture dry calibration
+    MatterTemperatureStub calibWetValue;       // Moisture wet calibration
+    MatterTemperatureStub calibBatteryDiv;     // Battery voltage divider
+    
+    // Control switches
     MatterSwitchStub powerManagementControl;   // Enable/disable power mgmt
+    MatterSwitchStub usbConnectionStatus;      // USB connected status
+    MatterSwitchStub calibrationModeControl;   // Calibration mode active
     
     PowerManager* powerManager = nullptr;
+    CalibrationManager* calibrationManager = nullptr;
     MatterStub matter;
     
     // Helper methods

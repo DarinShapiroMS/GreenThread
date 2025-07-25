@@ -57,9 +57,10 @@ void setup() {
   batteryMonitor.begin();
   batteryMonitor.setCalibrationManager(&calibrationManager);
 
-  // Start Matter cluster with power management integration
+  // Start Matter cluster with full integration
   matterMultiSensor.begin();
   matterMultiSensor.setPowerManager(&powerManager);
+  matterMultiSensor.setCalibrationManager(&calibrationManager);
 
 }
 
@@ -107,6 +108,14 @@ void loop() {
   // Matter publishing - update all sensor values
   matterMultiSensor.setSoilMoisture(moisture);
   matterMultiSensor.setBatteryVoltage(voltage);
+  matterMultiSensor.setUsbConnected(usbConnected);
+  
+  // Update calibration values periodically (every 10th reading)
+  static uint8_t calibUpdateCounter = 0;
+  if (++calibUpdateCounter >= 10) {
+    calibUpdateCounter = 0;
+    matterMultiSensor.updateCalibrationValues();
+  }
   
   if (matterMultiSensor.isOnline()) {
     statusDisplay->handleEvent(StatusEvent::MatterOnline);
