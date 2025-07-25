@@ -1,14 +1,15 @@
-# Soil Sense - Arduino Nano Matter Soil Moisture Sensor
+# Green Thread - Arduino Nano Matter Soil Moisture Sensor
 
-A professional-grade soil moisture monitoring system built on Arduino Nano Matter with Thread/Matter connectivity for Home Assistant integration.
+A professional-grade soil moisture monitoring system built on Arduino Nano Matter with Thread/Matter connectivity for Home Assistant integration. Help keep your grass and plants healthy with smart watering optimization through real-time soil monitoring.
 
 ## Features
 
 ### 🌱 **Core Functionality**
-- **Soil Moisture Monitoring**: Calibrated capacitive sensor with percentage readings
-- **Battery Management**: Voltage monitoring with low-battery alerts and power optimization
+- **Smart Soil Monitoring**: Calibrated capacitive sensor with percentage readings for optimal plant health
+- **Intelligent Watering Insights**: Know exactly when your plants need water, preventing over/under-watering
+- **Battery Management**: Long-lasting operation with intelligent power optimization
 - **Multi-Display Support**: Auto-detection of OLED, RGB LED, or Serial displays
-- **Matter/Thread Integration**: Full Home Assistant compatibility
+- **Matter/Thread Integration**: Seamless Home Assistant compatibility for smart garden automation
 
 ### ⚡ **Advanced Power Management**
 - **Adaptive Sleep Intervals**: Battery-aware power conservation
@@ -23,10 +24,10 @@ A professional-grade soil moisture monitoring system built on Arduino Nano Matte
 - **Modular Architecture**: Clean separation of concerns for maintainability
 
 ### 🏠 **Home Assistant Integration**
-- **Multiple Matter Endpoints**: Separate entities for all sensor data
-- **Remote Configuration**: Adjust sleep intervals and power settings
-- **Real-time Monitoring**: Battery level, power state, and sensor readings
-- **Automation Ready**: All attributes available for HA automations
+- **Multiple Matter Endpoints**: Separate entities for all sensor data and garden automation
+- **Remote Configuration**: Adjust sleep intervals and power settings from anywhere
+- **Real-time Monitoring**: Battery level, power state, and soil moisture readings
+- **Smart Garden Automation**: Create automations for optimal watering schedules and plant health alerts
 
 ## Hardware Requirements
 
