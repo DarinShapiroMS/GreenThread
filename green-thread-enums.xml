@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<configurator>
+  <domain name="Green Thread"/>
+  
+  <!-- Green Thread Soil Sensor Cluster Enums -->
+  <enum name="SoilMoistureLevel" type="enum8">
+    <cluster code="0x001F"/>
+    <item name="Critical" value="0x00"/>
+    <item name="VeryDry" value="0x01"/>
+    <item name="Dry" value="0x02"/>
+    <item name="Adequate" value="0x03"/>
+    <item name="Good" value="0x04"/>
+    <item name="Excellent" value="0x05"/>
+    <item name="Saturated" value="0x06"/>
+  </enum>
+  
+  <enum name="SensorHealthStatus" type="enum8">
+    <cluster code="0x001F"/>
+    <item name="Healthy" value="0x00"/>
+    <item name="Degraded" value="0x01"/>
+    <item name="Error" value="0x02"/>
+    <item name="NotConnected" value="0x03"/>
+  </enum>
+  
+  <enum name="CalibrationStatus" type="enum8">
+    <cluster code="0x001F"/>
+    <item name="Uncalibrated" value="0x00"/>
+    <item name="Calibrating" value="0x01"/>
+    <item name="Calibrated" value="0x02"/>
+    <item name="CalibrationFailed" value="0x03"/>
+  </enum>
+  
+  <enum name="PowerMode" type="enum8">
+    <cluster code="0x001F"/>
+    <item name="UsbPowered" value="0x00"/>
+    <item name="BatteryNormal" value="0x01"/>
+    <item name="BatteryLow" value="0x02"/>
+    <item name="BatteryCritical" value="0x03"/>
+  </enum>
+  
+</configurator>

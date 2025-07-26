@@ -12,8 +12,14 @@ void OledStatusDisplay::begin() {
 
 void OledStatusDisplay::handleEvent(StatusEvent event) {
   switch (event) {
-    case StatusEvent::Booting:
+    case StatusEvent::BootStarting:
+    case StatusEvent::BootSensorInit:
+    case StatusEvent::BootNetworkInit:
+    case StatusEvent::BootMatterInit:
       drawCentered("Booting...");
+      break;
+    case StatusEvent::BootComplete:
+      drawCentered("Boot complete");
       break;
     case StatusEvent::ThreadConnected:
       drawCentered("Thread connected");

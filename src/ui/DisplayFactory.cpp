@@ -19,32 +19,45 @@ StatusDisplay* DisplayFactory::createPrimaryDisplay() {
 }
 
 StatusDisplay* DisplayFactory::createSecondaryDisplay() {
-  // Only create secondary display if USB is connected and it's not the primary
-  if (isUsbConnected()) {
-    DisplayType primaryType = detectBestDisplay();
-    if (primaryType != DisplayType::Serial) {
-      return createSerialDisplay(); // Add serial as secondary when on USB
-    }
+  // Always add serial as secondary display when USB is connected
+  if (isUsbConnected() && kEnableSerialWhenUsbConnected) {
+    Serial.println("[Display] Adding Serial as secondary display (USB connected)");
+    return createSerialDisplay();
   }
   return nullptr; // No secondary display needed
 }
 
 DisplayFactory::DisplayType DisplayFactory::detectBestDisplay() {
-  // Priority order: OLED > RGB_LED > Serial
+  // TEMPORARY: Force RGB LED for testing - comment out OLED detection
+  /*
   if (isOledAvailable()) {
+    Serial.println("[Display] Selected: OLED");
     return DisplayType::OLED;
-  } else if (isUsbConnected() && kEnableSerialWhenUsbConnected) {
-    return DisplayType::Serial; // Prefer Serial when on USB and no OLED
   } else {
-    return DisplayType::RGB_LED; // Default to LED when battery powered
-  }
+  */
+    Serial.println("[Display] FORCED: RGB LED (for testing)");
+    return DisplayType::RGB_LED; // Force RGB LED for testing
+  //}
 }
 
 bool DisplayFactory::isOledAvailable() {
   initializeI2cForDetection();
   
+  Serial.print("[Display] Checking for OLED at 0x");
+  Serial.print(kOledI2cAddress, HEX);
+  Serial.print("... ");
+  
   Wire.beginTransmission(kOledI2cAddress);
-  bool available = (Wire.endTransmission() == 0);
+  uint8_t error = Wire.endTransmission();
+  bool available = (error == 0);
+  
+  if (available) {
+    Serial.println("FOUND!");
+  } else {
+    Serial.print("NOT FOUND (error ");
+    Serial.print(error);
+    Serial.println(")");
+  }
   
   cleanupI2cAfterDetection();
   return available;

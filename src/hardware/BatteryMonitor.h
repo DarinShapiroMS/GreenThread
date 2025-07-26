@@ -5,7 +5,16 @@
 enum class BatteryStatus {
   Normal,
   Low,
-  Critical
+  Critical,
+  NotConnected,  // No battery physically connected
+  Dead           // Battery connected but completely discharged
+};
+
+enum class BatteryState {
+  Healthy,       // Battery connected and functional
+  NotPresent,    // No battery detected (floating pin)
+  DeadBattery,   // Battery present but dead/critically low
+  Unknown        // Unable to determine state
 };
 
 class BatteryMonitor {
@@ -15,7 +24,12 @@ public:
   
   float readVoltage();
   BatteryStatus getStatus();
+  BatteryState getBatteryState();
   bool isLow() const;
+  bool isBatteryConnected() const;
+  bool isBatteryDead() const;
+  const char* getBatteryStatusString() const;
+  const char* getBatteryStateString() const;
   
   // Calibration methods
   void setVoltageDivider(float ratio);

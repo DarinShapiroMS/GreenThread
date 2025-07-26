@@ -1,0 +1,138 @@
+<?xml version="1.0"?>
+<configurator>
+  <domain name="Green Thread"/>
+  
+  <!-- Green Thread Soil Sensor Cluster Definition -->
+  <cluster>
+    <name>Green Thread Soil Sensor</name>
+    <domain>Green Thread</domain>
+    <code>0x001F</code>
+    <define>GREEN_THREAD_SOIL_SENSOR_CLUSTER</define>
+    <client init="false" tick="false">true</client>
+    <server init="false" tick="false">true</server>
+    <description>
+      Green Thread custom cluster for advanced soil moisture sensing with calibration,
+      health monitoring, and power management capabilities.
+    </description>
+    
+    <!-- Attributes -->
+    <attribute side="server" code="0x0000" define="SOIL_MOISTURE_PERCENT" type="int16u" 
+               writable="false" default="0" optional="false">
+      <description>Current soil moisture percentage (0-10000 representing 0.00% to 100.00%)</description>
+    </attribute>
+    
+    <attribute side="server" code="0x0001" define="MOISTURE_LEVEL" type="SoilMoistureLevel" 
+               writable="false" default="0" optional="false">
+      <description>Categorized moisture level based on thresholds</description>
+    </attribute>
+    
+    <attribute side="server" code="0x0002" define="DRY_CALIBRATION_VALUE" type="int16u" 
+               writable="false" default="0" optional="false">
+      <description>Raw sensor reading when completely dry (calibration point)</description>
+    </attribute>
+    
+    <attribute side="server" code="0x0003" define="WET_CALIBRATION_VALUE" type="int16u" 
+               writable="false" default="1023" optional="false">
+      <description>Raw sensor reading when fully saturated (calibration point)</description>
+    </attribute>
+    
+    <attribute side="server" code="0x0004" define="RAW_SENSOR_VALUE" type="int16u" 
+               writable="false" default="0" optional="false">
+      <description>Current raw sensor reading (uncalibrated)</description>
+    </attribute>
+    
+    <attribute side="server" code="0x0005" define="SENSOR_HEALTH" type="SensorHealthStatus" 
+               writable="false" default="0" optional="false">
+      <description>Current sensor health status</description>
+    </attribute>
+    
+    <attribute side="server" code="0x0006" define="CALIBRATION_STATUS" type="CalibrationStatus" 
+               writable="false" default="0" optional="false">
+      <description>Current calibration status</description>
+    </attribute>
+    
+    <attribute side="server" code="0x0007" define="LOW_MOISTURE_THRESHOLD" type="int8u" 
+               writable="true" default="20" optional="false">
+      <description>Low moisture threshold percentage (0-100)</description>
+    </attribute>
+    
+    <attribute side="server" code="0x0008" define="HIGH_MOISTURE_THRESHOLD" type="int8u" 
+               writable="true" default="80" optional="false">
+      <description>High moisture threshold percentage (0-100)</description>
+    </attribute>
+    
+    <attribute side="server" code="0x0009" define="MEASUREMENT_INTERVAL" type="int32u" 
+               writable="true" default="300" optional="false">
+      <description>Measurement interval in seconds</description>
+    </attribute>
+    
+    <attribute side="server" code="0x000A" define="POWER_MODE" type="PowerMode" 
+               writable="false" default="1" optional="false">
+      <description>Current power mode (USB/Battery status)</description>
+    </attribute>
+    
+    <attribute side="server" code="0x000B" define="BATTERY_VOLTAGE" type="int16u" 
+               writable="false" default="0" optional="false">
+      <description>Battery voltage in millivolts (0 = no battery)</description>
+    </attribute>
+    
+    <!-- Commands -->
+    <command source="client" code="0x00" name="StartDryCalibration" optional="false">
+      <description>Start dry calibration process</description>
+    </command>
+    
+    <command source="client" code="0x01" name="StartWetCalibration" optional="false">
+      <description>Start wet calibration process</description>
+    </command>
+    
+    <command source="client" code="0x02" name="ResetCalibration" optional="false">
+      <description>Reset calibration to factory defaults</description>
+    </command>
+    
+    <command source="client" code="0x03" name="ForceMeasurement" optional="false">
+      <description>Force immediate sensor measurement</description>
+    </command>
+    
+    <command source="client" code="0x04" name="SetMoistureThresholds" optional="false">
+      <description>Set low and high moisture thresholds</description>
+      <arg name="LowThreshold" type="int8u"/>
+      <arg name="HighThreshold" type="int8u"/>
+    </command>
+    
+    <command source="client" code="0x05" name="GetSensorStatus" optional="false">
+      <description>Get comprehensive sensor status</description>
+    </command>
+    
+    <command source="client" code="0x06" name="EnterSleepMode" optional="false">
+      <description>Put sensor into low-power sleep mode</description>
+    </command>
+    
+    <!-- Events -->
+    <event side="server" code="0x00" name="MoistureAlert" priority="info" optional="false">
+      <description>Triggered when moisture crosses threshold</description>
+      <field id="0" name="MoisturePercent" type="int16u"/>
+      <field id="1" name="MoistureLevel" type="SoilMoistureLevel"/>
+      <field id="2" name="AlertType" type="int8u"/> <!-- 0=low, 1=high, 2=normal -->
+    </event>
+    
+    <event side="server" code="0x01" name="CalibrationComplete" priority="info" optional="false">
+      <description>Triggered when calibration process completes</description>
+      <field id="0" name="CalibrationStatus" type="CalibrationStatus"/>
+      <field id="1" name="DryValue" type="int16u"/>
+      <field id="2" name="WetValue" type="int16u"/>
+    </event>
+    
+    <event side="server" code="0x02" name="SensorHealthChanged" priority="info" optional="false">
+      <description>Triggered when sensor health status changes</description>
+      <field id="0" name="HealthStatus" type="SensorHealthStatus"/>
+      <field id="1" name="RawValue" type="int16u"/>
+    </event>
+    
+    <event side="server" code="0x03" name="PowerModeChanged" priority="info" optional="false">
+      <description>Triggered when power mode changes</description>
+      <field id="0" name="PowerMode" type="PowerMode"/>
+      <field id="1" name="BatteryVoltage" type="int16u"/>
+    </event>
+    
+  </cluster>
+</configurator>

@@ -26,6 +26,17 @@ constexpr bool kEnableSerialWhenUsbConnected = true; // Enable serial display wh
 constexpr uint32_t kSerialBaudRate   = 115200;
 constexpr uint32_t kInitDelay        = 50;     // Initial delay in milliseconds
 
+// --- Debug Configuration ---
+#define DEBUG_SERIAL         // Enable serial debug output (comment out for release)
+// #define DEBUG_I2C_SCAN    // Enable I2C device scanning at boot (debug only)
+
+// --- Serial Command Configuration ---
+namespace {
+  constexpr uint8_t kSerialBufferSize = 32;    // Command buffer size (longest: "calibrate_wet")
+  constexpr int kMinInterval = 10;             // Minimum measurement interval (seconds)
+  constexpr int kMaxInterval = 3600;           // Maximum measurement interval (seconds)
+}
+
 // --- EEPROM Configuration ---
 constexpr uint16_t kEepromCalibrationAddress = 0;    // Start address for calibration data
 constexpr uint16_t kEepromMagicNumber        = 0xCAFE; // Magic number to validate EEPROM data

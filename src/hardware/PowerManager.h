@@ -68,8 +68,13 @@ public:
   // Power management actions
   bool shouldEnterSleep() const;
   bool shouldWakeUp() const;
-  void enterSleepMode();
+  [[noreturn]] void enterSleepMode();  // Never returns - enters deep sleep
   void wakeFromSleep();
+  
+  // Sleep state management - prevents redundant sleep events
+  bool needsSleepEvent() const;
+  void markSleepEventSent();
+  void markSleepEventCleared();
   
   // Statistics and diagnostics
   uint32_t getTotalSleepTime() const { return totalSleepTime; }
@@ -83,6 +88,9 @@ private:
   uint32_t stateChangeTime;
   uint32_t totalSleepTime;
   uint32_t sleepCycles;
+  
+  // Sleep event tracking to prevent flooding
+  mutable bool sleepEventSent;
   
   void loadDefaultConfiguration();
   void validateConfiguration();

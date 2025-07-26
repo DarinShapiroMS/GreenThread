@@ -8,6 +8,7 @@ void PowerManager::begin() {
   stateChangeTime = millis();
   totalSleepTime = 0;
   sleepCycles = 0;
+  sleepEventSent = false;  // Initialize sleep event tracking
 }
 
 void PowerManager::updatePowerState(float batteryVoltage, bool usbConnected) {
@@ -29,6 +30,8 @@ void PowerManager::updatePowerState(float batteryVoltage, bool usbConnected) {
     lastState = currentState;
     currentState = newState;
     stateChangeTime = millis();
+    // Clear sleep event flag when power state changes
+    sleepEventSent = false;
   }
 }
 
@@ -104,6 +107,18 @@ void PowerManager::enterSleepMode() {
   if (shouldEnterSleep()) {
     sleepCycles++;
     // Platform-specific sleep implementation would go here
+    // For now, simulate with infinite loop (actual implementation would use deep sleep)
+    #ifdef DEBUG_SERIAL
+    Serial.println(F("[PowerManager] Entering deep sleep mode"));
+    Serial.flush(); // Ensure message is sent before sleep
+    #endif
+    
+    // In real implementation, this would enter deep sleep and never return
+    // The device would wake up by reset/interrupt and restart from setup()
+    while(true) {
+      // Simulate deep sleep - device would be powered down here
+      delay(1000);
+    }
   }
 }
 
@@ -151,4 +166,16 @@ void PowerManager::validateConfiguration() {
 
 uint32_t PowerManager::constrainSleepInterval(uint32_t interval) const {
   return constrain(interval, config.minSleepInterval, config.maxSleepInterval);
+}
+
+bool PowerManager::needsSleepEvent() const {
+  return shouldEnterSleep() && !sleepEventSent;
+}
+
+void PowerManager::markSleepEventSent() {
+  sleepEventSent = true;
+}
+
+void PowerManager::markSleepEventCleared() {
+  sleepEventSent = false;
 }
