@@ -1,5 +1,8 @@
 #include "CommissioningManager.h"
 
+// Silicon Labs Matter library for Arduino Nano Matter  
+// #include <Matter.h>  // Temporarily commented out for compilation test
+
 // ButtonCommissioning implementation
 void ButtonCommissioning::begin() {
   pinMode(BUTTON_PIN, INPUT_PULLUP);  // Built-in pull-up
@@ -106,10 +109,24 @@ void ButtonCommissioning::startCommissioning() {
   transitionToState(CommissioningState::READY);
   commissioningStartTime = millis();
   
-  // TODO: Add actual Matter commissioning start here
-  // For now, simulate progression after 2 seconds
-  Serial.println(F("[Commissioning] Commissioning mode active"));
-  Serial.println(F("[Commissioning] TODO: Start Matter commissioning advertisements"));
+  // Check if device is already commissioned
+  /* // Temporarily commented out for compilation test
+  if (Matter.isDeviceCommissioned()) {
+    Serial.println(F("[Commissioning] Device already commissioned"));
+    transitionToState(CommissioningState::SUCCESS);
+    return;
+  }
+  
+  // Display commissioning information
+  Serial.println(F("[Commissioning] Matter device is not commissioned"));
+  Serial.println(F("[Commissioning] Commission it to your Matter hub with the manual pairing code or QR code"));
+  Serial.printf("Manual pairing code: %s\n", Matter.getManualPairingCode().c_str());
+  Serial.printf("QR code URL: %s\n", Matter.getOnboardingQRCodeUrl().c_str());
+  */
+  
+  Serial.println(F("[Commissioning] Ready for Matter commissioning (placeholder - real implementation coming)"));
+  
+  transitionToState(CommissioningState::IN_PROGRESS);
 }
 
 void ButtonCommissioning::stopCommissioning() {
@@ -118,9 +135,11 @@ void ButtonCommissioning::stopCommissioning() {
   }
   
   Serial.println(F("[Commissioning] Stopping commissioning"));
-  transitionToState(CommissioningState::IDLE);
   
-  // TODO: Stop Matter commissioning advertisements
+  // Matter commissioning is handled automatically by the library
+  // No explicit stop needed - just transition to idle
+  
+  transitionToState(CommissioningState::IDLE);
 }
 
 void ButtonCommissioning::transitionToState(CommissioningState newState) {

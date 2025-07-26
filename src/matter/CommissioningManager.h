@@ -1,6 +1,7 @@
 #pragma once
 #include <Arduino.h>
 #include "../ui/StatusDisplay.h"
+// #include <Matter.h>  // Temporarily commented out for compilation test
 
 // Arduino Nano Matter built-in button pin
 constexpr uint8_t BUTTON_PIN = 7;  // Built-in button on Arduino Nano Matter
